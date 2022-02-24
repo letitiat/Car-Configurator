@@ -45,6 +45,10 @@ body {
     display: none;
 }
 
+.option-tabs {
+  margin-bottom: 15px;
+}
+
 .option-parents.show-active .container {
     display: flex;
 }
@@ -63,6 +67,7 @@ body {
   top: 0;
   display: flex;
   width: 100%;
+  height: fit-content;
 }
 
 .options-container {
@@ -74,23 +79,31 @@ body {
   pointer-events: all;
   cursor: pointer;
   background-position: 50%;
+  border-radius: 50%;
+  overflow: hidden;
   background-color: white;
   margin-bottom: 3px;
-  padding: 10px;
-  height: 55px;
-  width: 55px;
+  height: 70px;
+  width: 70px;
+  margin-right: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  transition: .3s all;
+  transform-origin: center;
+}
+
+.option img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
 }
 .option:hover {
-  border-left: 5px solid white;
-  width: 58px;
+  transform: scale(1.13);
 }
 .option.--is-active {
-  border-right: 3px solid red;
-  width: 58px;
+  transform: scale(1.13);
   cursor: default;
 }
 .option.--is-active:hover {
@@ -126,6 +139,7 @@ body {
 .tray__swatch {
   transition: 0.1s ease-in;
   height: 40px;
+  cursor: pointer;
   border-radius: 50%;
   min-width: 40px;
   margin-right: 3px;
@@ -230,8 +244,14 @@ body {
   position: relative;
   z-index: 6;
   pointer-events: none;
-  transform: translateY(-100px);
+  transform: translateY(-155px);
   transition-timing-function: ease-in;
+}
+
+.loaded .options-container {
+  transition: .2s all .4s;
+
+  /* stops animation firing on page load */
 }
 
 .loaded .options-container {
@@ -248,9 +268,9 @@ body {
   position: absolute;
   pointer-events: none;
   width: 110vw;
+  height: 231%;
 }
 .spanner-trigger {
-  height: 20px;
   width: auto;
   z-index: 10;
   position: relative;
@@ -258,7 +278,7 @@ body {
   left: 20px;
   transform: rotate(45deg);
     cursor: pointer;
-    height: 12px;
+    height: 17px;
     width: auto;
     transform: rotate(140deg);
     filter: drop-shadow(1px -1px 2px rgb(0 0 0 / 0.4));

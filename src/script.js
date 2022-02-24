@@ -12,7 +12,8 @@ import * as dat from 'lil-gui'
 
 const params = {
   backgroundColor: 'ffffff',
-  floorColor: 'ffffff'
+  floorColor: 'ffffff',
+  starterMat: '0xffffff',
 }
 
 // Debug
@@ -26,6 +27,36 @@ const DRAG_NOTICE = document.getElementById('js-drag-notice');
 
 var activeOption = 'sidemirrors';
 const colors = [
+  {
+    color: 'f94144'
+  },
+  {
+    color: 'f3722c'
+  },
+  {
+    color: 'f9844a'
+  },
+  {
+    color: 'f9c74f'
+  },
+  {
+    color: '90be6d'
+  },
+  {
+    color: '4d908e'
+  },
+  {
+    color: 'f72585'
+  },
+  {
+    color: 'b5179e'
+  },
+  {
+    color: '560bad'
+  },
+  {
+    color: '3f37c9'
+  },
   {
     texture: '/textures/Abstract_Organic_005_basecolor.jpg',
     size: [2,2,2],
@@ -141,36 +172,6 @@ const colors = [
   color: 'FC9736'
 },
 {
-  color: 'F7BD69'
-},
-{
-  color: 'A4D09C'
-},
-{
-  color: '4C8A67'
-},
-{
-  color: '25608A'
-},
-{
-  color: '75C8C6'
-},
-{
-  color: 'F5E4B7'
-},
-{
-  color: 'E69041'
-},
-{
-  color: 'E56013'
-},
-{
-  color: '11101D'
-},
-{
-  color: '630609'
-},
-{
   color: 'C9240E'
 },
 {
@@ -213,13 +214,14 @@ var cameraFar = 5;
 var theModel;
 const MODEL_PATH =  "/model/car.glb";
 
-const backgroundColor = 0xB4E1C4;
+const backgroundColor = 0x8fd3a9;
 
 // Init the scene
 const scene = new THREE.Scene();
 
 // Set background
 scene.background = new THREE.Color(backgroundColor );
+scene.fog = new THREE.Fog( backgroundColor, 200, 1000 );
 
 gui.addColor(params, 'backgroundColor')
 .onChange(() =>
@@ -281,11 +283,18 @@ var camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHe
 camera.position.z = cameraFar;
 
 // Initial material
-const INITIAL_MTL = new THREE.MeshPhongMaterial( { color: 0xffffff, shininess: 10 } );
+const INITIAL_MTL = new THREE.MeshPhongMaterial( { color: params.starterMat, shininess: 10 } );
 INITIAL_MTL.flipY = false;
 INITIAL_MTL.side = DoubleSide;
 // If texture is used for color information, set colorspace.
 INITIAL_MTL.encoding = THREE.sRGBEncoding;
+
+gui.addColor(params, 'starterMat')
+.onChange(() =>
+{
+    INITIAL_MTL.color.set(params.starterMat);
+})
+.name('Car colour')
 
 
 const INITIAL_MAP = [
@@ -373,7 +382,7 @@ scene.add( dirLight );
 // Floor
 var floorGeometry = new THREE.PlaneGeometry(5000, 5000, 1, 1);
 var floorMaterial = new THREE.MeshPhongMaterial({
-  color: 0x62B87F,
+  color: 0x56d27f,
   shininess: 0
 });
 
@@ -613,9 +622,11 @@ $( ".options-trigger" ).on('click', function() {
 
   if ($(target).hasClass('show-active')) {
     $(target).removeClass('show-active');
+    $(this).removeClass('active');
   } else {
-    $('.container.show-active').removeClass('show-active');
+    $('.option-parents.show-active').removeClass('show-active');
     $(target).addClass('show-active');
+    $(this).addClass('active');
   }
 });
 
@@ -663,5 +674,7 @@ $( ".spanner-trigger" ).on('click', function() {
     tl.add(popUp());
     $(this).addClass('active');
     $('.options-container').addClass('open');
+    $('.options-trigger:first-child, .option-parents:first').addClass('show-active');
 }
 });
+
