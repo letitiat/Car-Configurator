@@ -17,7 +17,7 @@ const params = {
 }
 
 // Debug
-const gui = new dat.GUI()
+// const gui = new dat.GUI()
  
 const LOADER = document.getElementById('js-loader');
 
@@ -209,7 +209,7 @@ const colors = [
 }
   ]
 
-var cameraFar = 5;
+var cameraFar = 5.5;
 
 var theModel;
 const MODEL_PATH =  "/model/car.glb";
@@ -223,12 +223,12 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(backgroundColor );
 scene.fog = new THREE.Fog( backgroundColor, 200, 1000 );
 
-gui.addColor(params, 'backgroundColor')
-.onChange(() =>
-{
-    scene.background.set(params.backgroundColor)
-})
-.name('Background Colour')
+// gui.addColor(params, 'backgroundColor')
+// .onChange(() =>
+// {
+//     scene.background.set(params.backgroundColor)
+// })
+// .name('Background Colour')
 
 const canvas = document.querySelector('#c');
 
@@ -289,12 +289,12 @@ INITIAL_MTL.side = DoubleSide;
 // If texture is used for color information, set colorspace.
 INITIAL_MTL.encoding = THREE.sRGBEncoding;
 
-gui.addColor(params, 'starterMat')
-.onChange(() =>
-{
-    INITIAL_MTL.color.set(params.starterMat);
-})
-.name('Car colour')
+// gui.addColor(params, 'starterMat')
+// .onChange(() =>
+// {
+//     INITIAL_MTL.color.set(params.starterMat);
+// })
+// .name('Car colour')
 
 
 const INITIAL_MAP = [
@@ -332,7 +332,30 @@ loader.load(MODEL_PATH, function(gltf) {
   });
 
 // Set the models initial scale   
-  theModel.scale.set(1.4,1.4,1.4);
+setCarSize(window.innerWidth <= 600);
+
+const mediaQuery = window.matchMedia('(max-width: 600px)')
+
+function setCarSize(isMobile) {
+  // Check if the media query is true
+  if (isMobile) {
+    // Then log the following message to the console
+    theModel.scale.set(1,1,1);
+    theModel.position.x = -0.3;
+  } else {
+    theModel.scale.set(1.4, 1.4, 1.4);
+  }
+}
+
+function handleTabletChange(e) {
+  setCarSize(e.matches);
+}
+
+// Register event listener
+mediaQuery.addListener(handleTabletChange)
+
+// Initial check
+handleTabletChange(mediaQuery)
 
   // Offset the y position a bit
   theModel.position.y = -1.02;
@@ -387,13 +410,13 @@ var floorMaterial = new THREE.MeshPhongMaterial({
 });
 
 
-gui.addColor(params, 'floorColor')
-.onChange(() =>
-{
-    floorMaterial.color.set(params.floorColor);
+// gui.addColor(params, 'floorColor')
+// .onChange(() =>
+// {
+//     floorMaterial.color.set(params.floorColor);
 
-})
-.name('Floor Colour')
+// })
+// .name('Floor Colour')
 
 
 
@@ -622,11 +645,13 @@ $( ".options-trigger" ).on('click', function() {
 
   if ($(target).hasClass('show-active')) {
     $(target).removeClass('show-active');
-    $(this).removeClass('active');
+    $('.options-trigger.show-active').removeClass('show-active');
+    $(this).removeClass('show-active');
   } else {
     $('.option-parents.show-active').removeClass('show-active');
+    $('.options-trigger.show-active').removeClass('show-active');
     $(target).addClass('show-active');
-    $(this).addClass('active');
+    $(this).addClass('show-active');
   }
 });
 
